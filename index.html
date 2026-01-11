@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>████ ACCÈS RESTREINT ████</title>
-    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Share+Tech+Mono&family=Rajdhani:wght@300;500;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Share+Tech+Mono&family=Rajdhani:wght@300;500;700&family=Cinzel:wght@400;700&display=swap" rel="stylesheet">
     
     <!-- Firebase SDK -->
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
@@ -528,6 +528,7 @@
             padding: 20px 40px;
             background: rgba(0,0,0,0.5);
             border-bottom: 1px solid rgba(0, 255, 136, 0.1);
+            flex-wrap: wrap;
         }
 
         .nav-tab {
@@ -573,6 +574,22 @@
             box-shadow: 0 0 20px rgba(0, 255, 136, 0.2);
         }
 
+        .nav-tab.rules-tab {
+            border-color: rgba(255, 215, 0, 0.3);
+        }
+
+        .nav-tab.rules-tab:hover {
+            border-color: var(--gold);
+            color: var(--gold);
+        }
+
+        .nav-tab.rules-tab.active {
+            background: rgba(255, 215, 0, 0.1);
+            border-color: var(--gold);
+            color: var(--gold);
+            box-shadow: 0 0 20px rgba(255, 215, 0, 0.2);
+        }
+
         .dashboard-content {
             padding: 40px;
         }
@@ -609,6 +626,14 @@
             width: 30px;
             height: 2px;
             background: var(--primary);
+        }
+
+        .section-title.gold {
+            color: var(--gold);
+        }
+
+        .section-title.gold::before {
+            background: var(--gold);
         }
 
         .cams-grid {
@@ -1087,6 +1112,164 @@
         }
 
         /* ═══════════════════════════════════════════════════════════════
+           SECTION: RÈGLES ET CODES
+        ═══════════════════════════════════════════════════════════════ */
+        .rules-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 40px;
+        }
+
+        .rules-panel, .code-panel {
+            background: rgba(0, 0, 0, 0.6);
+            border: 1px solid rgba(255, 215, 0, 0.2);
+            padding: 30px;
+            position: relative;
+        }
+
+        .rules-panel::before, .code-panel::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, transparent, var(--gold), transparent);
+        }
+
+        .panel-title {
+            font-family: 'Cinzel', serif;
+            font-size: 24px;
+            color: var(--gold);
+            text-align: center;
+            margin-bottom: 30px;
+            text-shadow: 0 0 20px rgba(255, 215, 0, 0.5);
+            letter-spacing: 5px;
+        }
+
+        .panel-title span {
+            display: block;
+            font-size: 12px;
+            color: #666;
+            margin-top: 5px;
+            font-family: 'Share Tech Mono', monospace;
+            letter-spacing: 2px;
+        }
+
+        /* Articles du règlement */
+        .article {
+            margin-bottom: 25px;
+            padding: 20px;
+            background: rgba(255, 215, 0, 0.03);
+            border-left: 3px solid var(--gold);
+            position: relative;
+        }
+
+        .article-number {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 11px;
+            color: var(--gold);
+            margin-bottom: 8px;
+            letter-spacing: 2px;
+        }
+
+        .article-title {
+            font-family: 'Cinzel', serif;
+            font-size: 14px;
+            color: #fff;
+            margin-bottom: 10px;
+        }
+
+        .article-content {
+            font-size: 13px;
+            color: #aaa;
+            line-height: 1.7;
+            font-style: italic;
+        }
+
+        .article-content strong {
+            color: var(--secondary);
+            font-style: normal;
+        }
+
+        .rules-warning {
+            margin-top: 30px;
+            padding: 15px;
+            background: rgba(255, 0, 85, 0.1);
+            border: 1px solid rgba(255, 0, 85, 0.3);
+            text-align: center;
+            font-size: 11px;
+            color: var(--secondary);
+        }
+
+        /* Code du clan */
+        .code-verse {
+            margin-bottom: 25px;
+            padding: 15px 20px;
+            position: relative;
+        }
+
+        .code-verse::before {
+            content: '"';
+            position: absolute;
+            top: 0;
+            left: 0;
+            font-size: 40px;
+            color: rgba(255, 215, 0, 0.2);
+            font-family: 'Cinzel', serif;
+            line-height: 1;
+        }
+
+        .code-verse p {
+            font-size: 13px;
+            color: #bbb;
+            line-height: 1.8;
+            font-style: italic;
+            margin-left: 20px;
+        }
+
+        .code-verse.highlight {
+            background: linear-gradient(90deg, rgba(255, 215, 0, 0.1), transparent);
+            border-left: 2px solid var(--gold);
+        }
+
+        .code-verse.highlight p {
+            color: #fff;
+            font-weight: bold;
+        }
+
+        .code-final {
+            text-align: center;
+            margin-top: 40px;
+            padding: 30px;
+            background: linear-gradient(180deg, rgba(255, 215, 0, 0.1), transparent);
+            border-top: 1px solid rgba(255, 215, 0, 0.3);
+        }
+
+        .code-final-text {
+            font-family: 'Cinzel', serif;
+            font-size: 20px;
+            color: var(--gold);
+            text-shadow: 0 0 30px rgba(255, 215, 0, 0.5);
+            letter-spacing: 3px;
+        }
+
+        .motto {
+            margin-top: 40px;
+            text-align: center;
+            padding: 20px;
+            border: 1px solid rgba(255, 215, 0, 0.2);
+            background: rgba(0, 0, 0, 0.5);
+        }
+
+        .motto-text {
+            font-family: 'Cinzel', serif;
+            font-size: 16px;
+            color: var(--gold);
+            font-style: italic;
+        }
+
+        /* ═══════════════════════════════════════════════════════════════
            SECTION: COMMUNICATIONS
         ═══════════════════════════════════════════════════════════════ */
         .chat-container {
@@ -1331,7 +1514,6 @@
             z-index: 9998;
         }
 
-        /* Loading indicator */
         .loading-overlay {
             position: fixed;
             top: 0;
@@ -1370,7 +1552,6 @@
             font-size: 14px;
         }
 
-        /* Scrollbar */
         ::-webkit-scrollbar {
             width: 8px;
         }
@@ -1389,6 +1570,12 @@
         }
 
         /* Responsive */
+        @media (max-width: 1000px) {
+            .rules-container {
+                grid-template-columns: 1fr;
+            }
+        }
+
         @media (max-width: 900px) {
             .cams-grid {
                 grid-template-columns: 1fr;
@@ -1502,6 +1689,7 @@
             <button class="nav-tab active" data-section="surveillance">Surveillance</button>
             <button class="nav-tab" data-section="globe">Carte Globale</button>
             <button class="nav-tab" data-section="members">Membres</button>
+            <button class="nav-tab rules-tab" data-section="rules">Règles & Code</button>
             <button class="nav-tab" data-section="comms">Communications</button>
         </nav>
 
@@ -1601,6 +1789,152 @@
                 <div class="members-grid" id="membersGrid"></div>
             </section>
 
+            <!-- Section Règles & Code -->
+            <section id="rules" class="content-section">
+                <h2 class="section-title gold">RÈGLES & CODE DU CLAN</h2>
+                
+                <div class="rules-container">
+                    <!-- Règlement -->
+                    <div class="rules-panel">
+                        <h3 class="panel-title">RÈGLEMENT<span>// LOIS DU CLAN</span></h3>
+                        
+                        <div class="article">
+                            <div class="article-number">ARTICLE I</div>
+                            <div class="article-title">— De l'identité</div>
+                            <div class="article-content">
+                                Le masque est votre seule identité.<br>
+                                Il est formellement interdit de prononcer le nom réel d'un membre, d'en demander l'identité ou de chercher à la découvrir.
+                            </div>
+                        </div>
+
+                        <div class="article">
+                            <div class="article-number">ARTICLE II</div>
+                            <div class="article-title">— Du clan avant l'individu</div>
+                            <div class="article-content">
+                                La sécurité, l'intégrité et les valeurs du Clan priment sur toute chose.<br>
+                                Chaque membre a le devoir de protéger les autres et d'assurer la réussite des missions du Clan.
+                            </div>
+                        </div>
+
+                        <div class="article">
+                            <div class="article-number">ARTICLE III</div>
+                            <div class="article-title">— Des innocents</div>
+                            <div class="article-content">
+                                Il est <strong>strictement interdit</strong> de nuire à un innocent, de quelque manière que ce soit.<br>
+                                L'intimidation est autorisée uniquement si elle ne fait appel à aucune violence physique.
+                            </div>
+                        </div>
+
+                        <div class="article">
+                            <div class="article-number">ARTICLE IV</div>
+                            <div class="article-title">— Des conflits internes</div>
+                            <div class="article-content">
+                                Tout conflit entre membres sera réglé par un combat singulier, sans alter.<br>
+                                Le perdant devra reconnaître sa faute.<br>
+                                Toute tentative de vengeance ou d'agression en dehors de ce cadre entraînera des <strong>conséquences sévères</strong>.
+                            </div>
+                        </div>
+
+                        <div class="article">
+                            <div class="article-number">ARTICLE V</div>
+                            <div class="article-title">— De l'autorité</div>
+                            <div class="article-content">
+                                Aucune hiérarchie n'est imposée au sein du Clan.<br>
+                                Chaque membre est libre d'écouter ou non les ordres émis par un autre membre.<br>
+                                <strong>Exception absolue : les ordres de Golden Massa.</strong>
+                            </div>
+                        </div>
+
+                        <div class="article">
+                            <div class="article-number">ARTICLE VI</div>
+                            <div class="article-title">— De la présence</div>
+                            <div class="article-content">
+                                La présence et la disponibilité sont exigées dès lors que l'emploi du temps du membre le permet.
+                            </div>
+                        </div>
+
+                        <div class="rules-warning">
+                            ⚠ Tout manquement à ces règles entraînera inexorablement des conséquences pouvant mener à la mort si répété ⚠
+                        </div>
+                    </div>
+
+                    <!-- Code -->
+                    <div class="code-panel">
+                        <h3 class="panel-title">CODE<span>// NOTRE CROYANCE</span></h3>
+
+                        <div class="code-verse">
+                            <p>Nous ne portons pas de nom.<br>
+                            Nous portons un masque.<br>
+                            Car nous ne cherchons ni reconnaissance ni lumière.</p>
+                        </div>
+
+                        <div class="code-verse">
+                            <p>Nous ne sommes ni héros, ni vilains.<br>
+                            Les héros obéissent à un système.<br>
+                            Les vilains obéissent à leurs désirs.<br>
+                            Nous, nous obéissons à la nécessité.</p>
+                        </div>
+
+                        <div class="code-verse">
+                            <p>La justice n'attend pas d'autorisation.<br>
+                            Quand la loi détourne le regard,<br>
+                            quand les héros protègent leur image,<br>
+                            alors nous agissons.</p>
+                        </div>
+
+                        <div class="code-verse highlight">
+                            <p>Aucun innocent ne tombera par notre main.<br>
+                            Notre force n'existe que pour ceux<br>
+                            qui exploitent, corrompent ou abusent de leur pouvoir.<br>
+                            Faire peur est un outil.<br>
+                            La violence gratuite est une faute.</p>
+                        </div>
+
+                        <div class="code-verse">
+                            <p>Le Clan passe avant l'individu.<br>
+                            Si l'un tombe, les autres avancent.<br>
+                            Si l'un hésite, les autres protègent.<br>
+                            Seul, tu es vulnérable.<br>
+                            Ensemble, nous sommes inévitables.</p>
+                        </div>
+
+                        <div class="code-verse">
+                            <p>Entre nous, il n'y a ni trône ni couronne.<br>
+                            La force ne donne pas le droit.<br>
+                            L'intelligence ne donne pas l'autorité.</p>
+                        </div>
+
+                        <div class="code-verse">
+                            <p>Nous n'agissons pas pour être vus.<br>
+                            Nous n'agissons pas pour être remerciés.<br>
+                            Si le monde nous hait mais que les innocents vivent,<br>
+                            alors nous avons réussi.</p>
+                        </div>
+
+                        <div class="code-verse highlight">
+                            <p>Trahis le Clan,<br>
+                            et tu deviendras ce que nous combattons.<br><br>
+                            Protège le Clan,<br>
+                            et même dans l'ombre,<br>
+                            tu feras partie de quelque chose de plus grand que toi.</p>
+                        </div>
+
+                        <div class="code-verse">
+                            <p>Nous sommes la réponse quand le système échoue.<br>
+                            Nous sommes le poids qui fait plier les puissants.</p>
+                        </div>
+
+                        <div class="code-final">
+                            <div class="code-final-text">NOUS SOMMES LE CLAN MASSA.</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="motto">
+                    <div class="motto-text">« Unis par le masque, guidés par la justice. »</div>
+                </div>
+            </section>
+
             <!-- Section Communications -->
             <section id="comms" class="content-section">
                 <h2 class="section-title">CANAL SÉCURISÉ</h2>
@@ -1632,7 +1966,7 @@
         // ═══════════════════════════════════════════════════════════════
         
         // ⚠️ REMPLACE CES VALEURS PAR CELLES DE TON PROJET FIREBASE ⚠️
-        const firebaseConfig = {
+         const firebaseConfig = {
             apiKey: "AIzaSyCeYAvYTqLiOdxUr5bFjC9z2R4R_cLWg5s",
             authDomain: "clan-massa.firebaseapp.com",
             databaseURL: "https://clan-massa-default-rtdb.europe-west1.firebasedatabase.app",
@@ -1648,7 +1982,7 @@
         const database = firebase.database();
 
         // ═══════════════════════════════════════════════════════════════
-        // DONNÉES MEMBRES (noms d'affichage seulement, PAS de mots de passe)
+        // DONNÉES MEMBRES
         // ═══════════════════════════════════════════════════════════════
         
         const MEMBERS_DISPLAY = {
@@ -1672,17 +2006,14 @@
             createEntranceStars();
             startClock();
             
-            // Navigation
             document.querySelectorAll('.nav-tab').forEach(tab => {
                 tab.addEventListener('click', () => switchSection(tab.dataset.section));
             });
 
-            // Écouter l'état d'authentification
             auth.onAuthStateChanged((user) => {
                 document.getElementById('loadingOverlay').classList.add('hidden');
                 
                 if (user) {
-                    // Utilisateur déjà connecté
                     currentUser = user;
                     currentUserData = {
                         email: user.email,
@@ -1696,23 +2027,20 @@
                 }
             });
 
-            // Écouter les changements en temps réel
             setupRealtimeListeners();
         });
 
         // ═══════════════════════════════════════════════════════════════
-        // LISTENERS TEMPS RÉEL FIREBASE
+        // LISTENERS TEMPS RÉEL
         // ═══════════════════════════════════════════════════════════════
         
         function setupRealtimeListeners() {
-            // Écouter les utilisateurs en ligne
             database.ref('online').on('value', (snapshot) => {
                 onlineUsers = snapshot.val() || {};
                 updateOnlineDisplay();
                 updateMembersGrid();
             });
 
-            // Écouter les messages du chat
             database.ref('messages').orderByChild('timestamp').limitToLast(50).on('value', (snapshot) => {
                 const messages = [];
                 snapshot.forEach((child) => {
@@ -1721,7 +2049,6 @@
                 renderChatMessages(messages);
             });
 
-            // Écouter les cibles
             database.ref('targets').on('value', (snapshot) => {
                 const targets = [];
                 snapshot.forEach((child) => {
@@ -1763,7 +2090,7 @@
         }
 
         // ═══════════════════════════════════════════════════════════════
-        // AUTHENTIFICATION FIREBASE (SÉCURISÉE)
+        // AUTHENTIFICATION
         // ═══════════════════════════════════════════════════════════════
         
         function handleLoginKeypress(e) {
@@ -1799,18 +2126,11 @@
                 showDashboard();
                 
             } catch (error) {
-                console.error('Erreur de connexion:', error);
-                
                 let errorMessage = '⚠ IDENTIFIANTS INVALIDES - ACCÈS REFUSÉ ⚠';
-                if (error.code === 'auth/user-not-found') {
-                    errorMessage = '⚠ UTILISATEUR INCONNU ⚠';
-                } else if (error.code === 'auth/wrong-password') {
-                    errorMessage = '⚠ MOT DE PASSE INCORRECT ⚠';
-                } else if (error.code === 'auth/invalid-email') {
-                    errorMessage = '⚠ FORMAT EMAIL INVALIDE ⚠';
-                } else if (error.code === 'auth/too-many-requests') {
-                    errorMessage = '⚠ TROP DE TENTATIVES - RÉESSAYEZ PLUS TARD ⚠';
-                }
+                if (error.code === 'auth/user-not-found') errorMessage = '⚠ UTILISATEUR INCONNU ⚠';
+                else if (error.code === 'auth/wrong-password') errorMessage = '⚠ MOT DE PASSE INCORRECT ⚠';
+                else if (error.code === 'auth/invalid-email') errorMessage = '⚠ FORMAT EMAIL INVALIDE ⚠';
+                else if (error.code === 'auth/too-many-requests') errorMessage = '⚠ TROP DE TENTATIVES ⚠';
                 
                 errorEl.textContent = errorMessage;
                 errorEl.classList.add('show');
@@ -1825,24 +2145,17 @@
             document.getElementById('login-page').classList.remove('active');
             document.getElementById('main-dashboard').classList.add('active');
             document.getElementById('headerUserName').textContent = currentUserData.name;
-            
-            // Mettre l'utilisateur en ligne dans Firebase
             setUserOnline();
-            
-            // Message système
             sendSystemMessage(`${currentUserData.name} a rejoint le canal.`);
         }
 
         function setUserOnline() {
             const userStatusRef = database.ref('online/' + currentUserData.id);
-            
             userStatusRef.set({
                 name: currentUserData.name,
                 email: currentUserData.email,
                 timestamp: firebase.database.ServerValue.TIMESTAMP
             });
-
-            // Supprimer le statut quand l'utilisateur se déconnecte
             userStatusRef.onDisconnect().remove();
         }
 
@@ -1851,9 +2164,7 @@
                 sendSystemMessage(`${currentUserData.name} a quitté le canal.`);
                 await database.ref('online/' + currentUserData.id).remove();
             }
-            
             await auth.signOut();
-            
             currentUser = null;
             currentUserData = null;
             document.getElementById('main-dashboard').classList.remove('active');
@@ -1862,11 +2173,8 @@
             document.getElementById('login-password').value = '';
         }
 
-        // Gérer la fermeture de page
         window.addEventListener('beforeunload', () => {
-            if (currentUserData) {
-                database.ref('online/' + currentUserData.id).remove();
-            }
+            if (currentUserData) database.ref('online/' + currentUserData.id).remove();
         });
 
         // ═══════════════════════════════════════════════════════════════
@@ -1877,7 +2185,6 @@
             document.querySelectorAll('.nav-tab').forEach(tab => {
                 tab.classList.toggle('active', tab.dataset.section === sectionId);
             });
-            
             document.querySelectorAll('.content-section').forEach(section => {
                 section.classList.toggle('active', section.id === sectionId);
             });
@@ -1891,121 +2198,72 @@
             function updateTime() {
                 const now = new Date();
                 const timeStr = now.toTimeString().split(' ')[0];
-                
                 const mainClock = document.getElementById('currentTime');
                 if (mainClock) mainClock.textContent = timeStr;
-                
-                document.querySelectorAll('.cam-time-live').forEach(el => {
-                    el.textContent = timeStr;
-                });
+                document.querySelectorAll('.cam-time-live').forEach(el => el.textContent = timeStr);
             }
-            
             updateTime();
             setInterval(updateTime, 1000);
         }
 
         // ═══════════════════════════════════════════════════════════════
-        // AFFICHAGE MEMBRES EN LIGNE
+        // MEMBRES EN LIGNE
         // ═══════════════════════════════════════════════════════════════
         
         function updateOnlineDisplay() {
             const container = document.getElementById('onlineMembersList');
             const countEl = document.getElementById('onlineCount');
-            
             let html = '';
             let onlineCount = Object.keys(onlineUsers).length;
             
-            // Afficher les membres en ligne
             Object.values(onlineUsers).forEach(user => {
-                html += `
-                    <div class="online-member">
-                        <div class="online-indicator on"></div>
-                        <span class="online-member-name">${user.name}</span>
-                    </div>
-                `;
+                html += `<div class="online-member"><div class="online-indicator on"></div><span class="online-member-name">${user.name}</span></div>`;
             });
             
-            // Ajouter un message si personne n'est en ligne
-            if (onlineCount === 0) {
-                html = '<div style="color: #444; font-size: 11px; text-align: center; padding: 20px;">Aucun membre en ligne</div>';
-            }
-            
+            if (onlineCount === 0) html = '<div style="color:#444;font-size:11px;text-align:center;padding:20px;">Aucun membre en ligne</div>';
             container.innerHTML = html;
             countEl.textContent = `${onlineCount} en ligne`;
         }
 
         function updateMembersGrid() {
             const container = document.getElementById('membersGrid');
-            
-            // Créer une liste des membres à partir des utilisateurs en ligne + noms connus
             const allMembers = new Set(Object.values(MEMBERS_DISPLAY));
             Object.values(onlineUsers).forEach(u => allMembers.add(u.name));
             
             let html = '';
             allMembers.forEach(memberName => {
                 const isOnline = Object.values(onlineUsers).some(u => u.name === memberName);
-                
-                html += `
-                    <div class="member-card ${isOnline ? 'online' : ''}">
-                        <div class="member-name">${memberName.replace(' MASSA', ' <span>MASSA</span>')}</div>
-                        <div class="member-status-indicator ${isOnline ? 'online' : 'offline'}">
-                            ${isOnline ? '● EN LIGNE' : '○ HORS LIGNE'}
-                        </div>
-                    </div>
-                `;
+                html += `<div class="member-card ${isOnline ? 'online' : ''}"><div class="member-name">${memberName.replace(' MASSA', ' <span>MASSA</span>')}</div><div class="member-status-indicator ${isOnline ? 'online' : 'offline'}">${isOnline ? '● EN LIGNE' : '○ HORS LIGNE'}</div></div>`;
             });
-            
             container.innerHTML = html;
         }
 
         // ═══════════════════════════════════════════════════════════════
-        // SYSTÈME DE CIBLES
+        // CIBLES
         // ═══════════════════════════════════════════════════════════════
         
         function renderTargets(targets) {
             const container = document.getElementById('targetsList');
-            
             if (!targets || targets.length === 0) {
                 container.innerHTML = '<div class="no-targets">Aucune cible définie</div>';
                 return;
             }
-            
-            container.innerHTML = targets.map(target => `
-                <div class="target-item">
-                    <div class="target-info">
-                        <div class="target-status"></div>
-                        <span class="target-name">${escapeHtml(target.name)}</span>
-                    </div>
-                    <button class="target-delete" onclick="deleteTarget('${target.id}')">✕</button>
-                </div>
-            `).join('');
+            container.innerHTML = targets.map(target => `<div class="target-item"><div class="target-info"><div class="target-status"></div><span class="target-name">${escapeHtml(target.name)}</span></div><button class="target-delete" onclick="deleteTarget('${target.id}')">✕</button></div>`).join('');
         }
 
         function addTarget() {
             const input = document.getElementById('newTargetInput');
             const name = input.value.trim();
-            
             if (!name || !currentUserData) return;
-            
-            database.ref('targets').push({
-                name: name,
-                addedBy: currentUserData.name,
-                timestamp: firebase.database.ServerValue.TIMESTAMP
-            });
-            
+            database.ref('targets').push({ name, addedBy: currentUserData.name, timestamp: firebase.database.ServerValue.TIMESTAMP });
             input.value = '';
         }
 
-        function deleteTarget(targetId) {
-            database.ref('targets/' + targetId).remove();
-        }
-
-        function handleTargetKeypress(e) {
-            if (e.key === 'Enter') addTarget();
-        }
+        function deleteTarget(targetId) { database.ref('targets/' + targetId).remove(); }
+        function handleTargetKeypress(e) { if (e.key === 'Enter') addTarget(); }
 
         // ═══════════════════════════════════════════════════════════════
-        // SYSTÈME DE CHAT
+        // CHAT
         // ═══════════════════════════════════════════════════════════════
         
         function renderChatMessages(messages) {
@@ -2013,68 +2271,30 @@
             const wasAtBottom = container.scrollHeight - container.clientHeight <= container.scrollTop + 50;
             
             container.innerHTML = messages.map(msg => {
-                if (msg.system) {
-                    return `<div class="system-message">[${msg.time}] ${escapeHtml(msg.text)}</div>`;
-                }
-                
+                if (msg.system) return `<div class="system-message">[${msg.time}] ${escapeHtml(msg.text)}</div>`;
                 const isOwn = currentUserData && msg.author === currentUserData.name;
-                return `
-                    <div class="chat-message ${isOwn ? 'own' : ''}">
-                        <div class="message-author">${escapeHtml(msg.author)}</div>
-                        <div class="message-text">${escapeHtml(msg.text)}</div>
-                        <div class="message-time">${msg.time}</div>
-                    </div>
-                `;
+                return `<div class="chat-message ${isOwn ? 'own' : ''}"><div class="message-author">${escapeHtml(msg.author)}</div><div class="message-text">${escapeHtml(msg.text)}</div><div class="message-time">${msg.time}</div></div>`;
             }).join('');
             
-            // Auto-scroll si on était en bas
-            if (wasAtBottom) {
-                container.scrollTop = container.scrollHeight;
-            }
+            if (wasAtBottom) container.scrollTop = container.scrollHeight;
         }
 
         function sendMessage() {
             const input = document.getElementById('chatInput');
             const text = input.value.trim();
-            
             if (!text || !currentUserData) return;
-            
-            const now = new Date();
-            const time = now.toTimeString().split(' ')[0];
-            
-            database.ref('messages').push({
-                author: currentUserData.name,
-                text: text,
-                time: time,
-                timestamp: firebase.database.ServerValue.TIMESTAMP,
-                system: false
-            });
-            
+            const time = new Date().toTimeString().split(' ')[0];
+            database.ref('messages').push({ author: currentUserData.name, text, time, timestamp: firebase.database.ServerValue.TIMESTAMP, system: false });
             input.value = '';
         }
 
         function sendSystemMessage(text) {
-            const now = new Date();
-            const time = now.toTimeString().split(' ')[0];
-            
-            database.ref('messages').push({
-                author: 'SYSTÈME',
-                text: text,
-                time: time,
-                timestamp: firebase.database.ServerValue.TIMESTAMP,
-                system: true
-            });
+            const time = new Date().toTimeString().split(' ')[0];
+            database.ref('messages').push({ author: 'SYSTÈME', text, time, timestamp: firebase.database.ServerValue.TIMESTAMP, system: true });
         }
 
-        function handleChatKeypress(e) {
-            if (e.key === 'Enter') sendMessage();
-        }
-
-        function escapeHtml(text) {
-            const div = document.createElement('div');
-            div.textContent = text;
-            return div.innerHTML;
-        }
+        function handleChatKeypress(e) { if (e.key === 'Enter') sendMessage(); }
+        function escapeHtml(text) { const div = document.createElement('div'); div.textContent = text; return div.innerHTML; }
     </script>
 </body>
 </html>

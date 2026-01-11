@@ -8,6 +8,7 @@
     
     <!-- Firebase SDK -->
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-database-compat.js"></script>
     
     <style>
@@ -401,6 +402,11 @@
             background: var(--primary);
             color: #000;
             box-shadow: 0 0 30px rgba(0, 255, 136, 0.5);
+        }
+
+        .login-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
         }
 
         .login-error {
@@ -1463,14 +1469,14 @@
             </div>
             <div class="login-form">
                 <div class="form-group">
-                    <label>Identifiant</label>
-                    <input type="text" id="login-username" placeholder="Entrez votre identifiant..." autocomplete="off">
+                    <label>Email</label>
+                    <input type="email" id="login-email" placeholder="votre-nom@massa.clan" autocomplete="off">
                 </div>
                 <div class="form-group">
                     <label>Mot de passe</label>
                     <input type="password" id="login-password" placeholder="Entrez votre mot de passe..." onkeypress="handleLoginKeypress(event)">
                 </div>
-                <button class="login-btn" onclick="attemptLogin()">Connexion Sécurisée</button>
+                <button class="login-btn" id="loginBtn" onclick="attemptLogin()">Connexion Sécurisée</button>
             </div>
             <div class="login-error" id="loginError">⚠ IDENTIFIANTS INVALIDES - ACCÈS REFUSÉ ⚠</div>
         </div>
@@ -1549,7 +1555,7 @@
                             <span class="cam-status"><span class="rec-dot"></span>REC</span>
                         </div>
                         <div class="cam-view">
-                            <img src="https://media.giphy.com/media/xT9IgzoKnwFNmISR8I/giphy.gif" alt="Feed 4">
+                            <img src="https://us1.discourse-cdn.com/spiceworks/original/4X/1/9/7/19759372b3610b7ff1531d335994e5ae17f43c87.gif" alt="Feed 4">
                             <div class="cam-overlay">● LIVE</div>
                             <div class="cam-time cam-time-live">00:00:00</div>
                             <div class="cam-location">ZONE INDUSTRIELLE</div>
@@ -1638,22 +1644,24 @@
 
         // Initialiser Firebase
         firebase.initializeApp(firebaseConfig);
+        const auth = firebase.auth();
         const database = firebase.database();
 
         // ═══════════════════════════════════════════════════════════════
-        // DONNÉES MEMBRES
+        // DONNÉES MEMBRES (noms d'affichage seulement, PAS de mots de passe)
         // ═══════════════════════════════════════════════════════════════
         
-        const MEMBERS_CREDENTIALS = {
-            'golden': { password: 'GoldenBoss77', name: 'Golden MASSA', id: 'golden' },
-            'cuirasser': { password: 'CuirArmor42', name: 'Cuirasser MASSA', id: 'cuirasser' },
-            'void': { password: 'VoidDark99', name: 'VOID MASSA', id: 'void' },
-            'afton': { password: 'AftonPurple13', name: 'Afton MASSA', id: 'afton' },
-            'oshina': { password: 'OshinaShadow88', name: 'Oshina MASSA', id: 'oshina' },
-            'dragon': { password: 'DragonFire666', name: 'Dragon MASSA', id: 'dragon' }
+        const MEMBERS_DISPLAY = {
+            'golden@massa.clan': 'Golden MASSA',
+            'cuirasser@massa.clan': 'Cuirasser MASSA',
+            'void@massa.clan': 'VOID MASSA',
+            'afton@massa.clan': 'Afton MASSA',
+            'oshina@massa.clan': 'Oshina MASSA',
+            'dragon@massa.clan': 'Dragon MASSA'
         };
 
         let currentUser = null;
+        let currentUserData = null;
         let onlineUsers = {};
 
         // ═══════════════════════════════════════════════════════════════
@@ -1669,9 +1677,23 @@
                 tab.addEventListener('click', () => switchSection(tab.dataset.section));
             });
 
-            // Vérifier la connexion Firebase
-            database.ref('.info/connected').on('value', (snapshot) => {
+            // Écouter l'état d'authentification
+            auth.onAuthStateChanged((user) => {
                 document.getElementById('loadingOverlay').classList.add('hidden');
+                
+                if (user) {
+                    // Utilisateur déjà connecté
+                    currentUser = user;
+                    currentUserData = {
+                        email: user.email,
+                        name: MEMBERS_DISPLAY[user.email] || user.email.split('@')[0] + ' MASSA',
+                        id: user.uid
+                    };
+                    
+                    document.getElementById('entrance-page').classList.add('hidden');
+                    document.getElementById('login-page').classList.remove('active');
+                    showDashboard();
+                }
             });
 
             // Écouter les changements en temps réel
@@ -1736,50 +1758,87 @@
             setTimeout(() => {
                 entrance.classList.add('hidden');
                 loginPage.classList.add('active');
-                document.getElementById('login-username').focus();
+                document.getElementById('login-email').focus();
             }, 1500);
         }
 
         // ═══════════════════════════════════════════════════════════════
-        // AUTHENTIFICATION
+        // AUTHENTIFICATION FIREBASE (SÉCURISÉE)
         // ═══════════════════════════════════════════════════════════════
         
         function handleLoginKeypress(e) {
             if (e.key === 'Enter') attemptLogin();
         }
 
-        function attemptLogin() {
-            const username = document.getElementById('login-username').value.toLowerCase().trim();
+        async function attemptLogin() {
+            const email = document.getElementById('login-email').value.trim();
             const password = document.getElementById('login-password').value.trim();
             const errorEl = document.getElementById('loginError');
+            const loginBtn = document.getElementById('loginBtn');
             
-            if (MEMBERS_CREDENTIALS[username] && MEMBERS_CREDENTIALS[username].password === password) {
-                currentUser = MEMBERS_CREDENTIALS[username];
-                errorEl.classList.remove('show');
-                showDashboard();
-            } else {
+            if (!email || !password) {
+                errorEl.textContent = '⚠ VEUILLEZ REMPLIR TOUS LES CHAMPS ⚠';
                 errorEl.classList.add('show');
                 setTimeout(() => errorEl.classList.remove('show'), 3000);
+                return;
             }
+
+            loginBtn.disabled = true;
+            loginBtn.textContent = 'CONNEXION...';
+
+            try {
+                const userCredential = await auth.signInWithEmailAndPassword(email, password);
+                currentUser = userCredential.user;
+                currentUserData = {
+                    email: currentUser.email,
+                    name: MEMBERS_DISPLAY[currentUser.email] || currentUser.email.split('@')[0] + ' MASSA',
+                    id: currentUser.uid
+                };
+                
+                errorEl.classList.remove('show');
+                showDashboard();
+                
+            } catch (error) {
+                console.error('Erreur de connexion:', error);
+                
+                let errorMessage = '⚠ IDENTIFIANTS INVALIDES - ACCÈS REFUSÉ ⚠';
+                if (error.code === 'auth/user-not-found') {
+                    errorMessage = '⚠ UTILISATEUR INCONNU ⚠';
+                } else if (error.code === 'auth/wrong-password') {
+                    errorMessage = '⚠ MOT DE PASSE INCORRECT ⚠';
+                } else if (error.code === 'auth/invalid-email') {
+                    errorMessage = '⚠ FORMAT EMAIL INVALIDE ⚠';
+                } else if (error.code === 'auth/too-many-requests') {
+                    errorMessage = '⚠ TROP DE TENTATIVES - RÉESSAYEZ PLUS TARD ⚠';
+                }
+                
+                errorEl.textContent = errorMessage;
+                errorEl.classList.add('show');
+                setTimeout(() => errorEl.classList.remove('show'), 4000);
+            }
+
+            loginBtn.disabled = false;
+            loginBtn.textContent = 'Connexion Sécurisée';
         }
 
         function showDashboard() {
             document.getElementById('login-page').classList.remove('active');
             document.getElementById('main-dashboard').classList.add('active');
-            document.getElementById('headerUserName').textContent = currentUser.name;
+            document.getElementById('headerUserName').textContent = currentUserData.name;
             
             // Mettre l'utilisateur en ligne dans Firebase
             setUserOnline();
             
             // Message système
-            sendSystemMessage(`${currentUser.name} a rejoint le canal.`);
+            sendSystemMessage(`${currentUserData.name} a rejoint le canal.`);
         }
 
         function setUserOnline() {
-            const userStatusRef = database.ref('online/' + currentUser.id);
+            const userStatusRef = database.ref('online/' + currentUserData.id);
             
             userStatusRef.set({
-                name: currentUser.name,
+                name: currentUserData.name,
+                email: currentUserData.email,
                 timestamp: firebase.database.ServerValue.TIMESTAMP
             });
 
@@ -1787,23 +1846,26 @@
             userStatusRef.onDisconnect().remove();
         }
 
-        function logout() {
-            if (currentUser) {
-                sendSystemMessage(`${currentUser.name} a quitté le canal.`);
-                database.ref('online/' + currentUser.id).remove();
+        async function logout() {
+            if (currentUserData) {
+                sendSystemMessage(`${currentUserData.name} a quitté le canal.`);
+                await database.ref('online/' + currentUserData.id).remove();
             }
             
+            await auth.signOut();
+            
             currentUser = null;
+            currentUserData = null;
             document.getElementById('main-dashboard').classList.remove('active');
             document.getElementById('entrance-page').classList.remove('hidden', 'entering');
-            document.getElementById('login-username').value = '';
+            document.getElementById('login-email').value = '';
             document.getElementById('login-password').value = '';
         }
 
         // Gérer la fermeture de page
         window.addEventListener('beforeunload', () => {
-            if (currentUser) {
-                database.ref('online/' + currentUser.id).remove();
+            if (currentUserData) {
+                database.ref('online/' + currentUserData.id).remove();
             }
         });
 
@@ -1851,19 +1913,22 @@
             const countEl = document.getElementById('onlineCount');
             
             let html = '';
-            let onlineCount = 0;
+            let onlineCount = Object.keys(onlineUsers).length;
             
-            Object.values(MEMBERS_CREDENTIALS).forEach(member => {
-                const isOnline = onlineUsers[member.id];
-                if (isOnline) onlineCount++;
-                
+            // Afficher les membres en ligne
+            Object.values(onlineUsers).forEach(user => {
                 html += `
                     <div class="online-member">
-                        <div class="online-indicator ${isOnline ? 'on' : 'off'}"></div>
-                        <span class="online-member-name ${isOnline ? '' : 'offline'}">${member.name}</span>
+                        <div class="online-indicator on"></div>
+                        <span class="online-member-name">${user.name}</span>
                     </div>
                 `;
             });
+            
+            // Ajouter un message si personne n'est en ligne
+            if (onlineCount === 0) {
+                html = '<div style="color: #444; font-size: 11px; text-align: center; padding: 20px;">Aucun membre en ligne</div>';
+            }
             
             container.innerHTML = html;
             countEl.textContent = `${onlineCount} en ligne`;
@@ -1872,13 +1937,17 @@
         function updateMembersGrid() {
             const container = document.getElementById('membersGrid');
             
+            // Créer une liste des membres à partir des utilisateurs en ligne + noms connus
+            const allMembers = new Set(Object.values(MEMBERS_DISPLAY));
+            Object.values(onlineUsers).forEach(u => allMembers.add(u.name));
+            
             let html = '';
-            Object.values(MEMBERS_CREDENTIALS).forEach(member => {
-                const isOnline = onlineUsers[member.id];
+            allMembers.forEach(memberName => {
+                const isOnline = Object.values(onlineUsers).some(u => u.name === memberName);
                 
                 html += `
                     <div class="member-card ${isOnline ? 'online' : ''}">
-                        <div class="member-name">${member.name.replace(' MASSA', ' <span>MASSA</span>')}</div>
+                        <div class="member-name">${memberName.replace(' MASSA', ' <span>MASSA</span>')}</div>
                         <div class="member-status-indicator ${isOnline ? 'online' : 'offline'}">
                             ${isOnline ? '● EN LIGNE' : '○ HORS LIGNE'}
                         </div>
@@ -1905,7 +1974,7 @@
                 <div class="target-item">
                     <div class="target-info">
                         <div class="target-status"></div>
-                        <span class="target-name">${target.name}</span>
+                        <span class="target-name">${escapeHtml(target.name)}</span>
                     </div>
                     <button class="target-delete" onclick="deleteTarget('${target.id}')">✕</button>
                 </div>
@@ -1916,11 +1985,11 @@
             const input = document.getElementById('newTargetInput');
             const name = input.value.trim();
             
-            if (!name) return;
+            if (!name || !currentUserData) return;
             
             database.ref('targets').push({
                 name: name,
-                addedBy: currentUser.name,
+                addedBy: currentUserData.name,
                 timestamp: firebase.database.ServerValue.TIMESTAMP
             });
             
@@ -1945,13 +2014,13 @@
             
             container.innerHTML = messages.map(msg => {
                 if (msg.system) {
-                    return `<div class="system-message">[${msg.time}] ${msg.text}</div>`;
+                    return `<div class="system-message">[${msg.time}] ${escapeHtml(msg.text)}</div>`;
                 }
                 
-                const isOwn = currentUser && msg.author === currentUser.name;
+                const isOwn = currentUserData && msg.author === currentUserData.name;
                 return `
                     <div class="chat-message ${isOwn ? 'own' : ''}">
-                        <div class="message-author">${msg.author}</div>
+                        <div class="message-author">${escapeHtml(msg.author)}</div>
                         <div class="message-text">${escapeHtml(msg.text)}</div>
                         <div class="message-time">${msg.time}</div>
                     </div>
@@ -1968,13 +2037,13 @@
             const input = document.getElementById('chatInput');
             const text = input.value.trim();
             
-            if (!text || !currentUser) return;
+            if (!text || !currentUserData) return;
             
             const now = new Date();
             const time = now.toTimeString().split(' ')[0];
             
             database.ref('messages').push({
-                author: currentUser.name,
+                author: currentUserData.name,
                 text: text,
                 time: time,
                 timestamp: firebase.database.ServerValue.TIMESTAMP,
